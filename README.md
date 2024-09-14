@@ -1,6 +1,6 @@
 # Projeto Web Application com Spring Boot e PostgreSQL
 
-Este projeto é uma aplicação web desenvolvida em Java utilizando o framework Spring Boot. A aplicação faz uso do Spring Data JPA para interagir com um banco de dados PostgreSQL e está containerizada utilizando Docker e Docker Compose para facilitar a implantação e execução.
+Este projeto é uma aplicação web desenvolvida em Java utilizando o framework Spring Boot. A aplicação faz uso do Spring Data JPA para interagir com um banco de dados PostgreSQL e está containerizada utilizando Docker e Docker Compose para facilitar a implantação e execução. O projeto inclui um **Makefile** para simplificar a execução de comandos comuns.
 
 ## Índice
 
@@ -11,8 +11,6 @@ Este projeto é uma aplicação web desenvolvida em Java utilizando o framework 
 *   [Instalação e Configuração](#instala%C3%A7%C3%A3o-e-configura%C3%A7%C3%A3o)
 
     *   [Clonar o Repositório](#clonar-o-reposit%C3%B3rio)
-
-    *   [Configuração de Variáveis de Ambiente](#configura%C3%A7%C3%A3o-de-vari%C3%A1veis-de-ambiente)
 
 *   [Construção e Execução](#constru%C3%A7%C3%A3o-e-execu%C3%A7%C3%A3o)
 
@@ -34,11 +32,13 @@ Antes de começar, certifique-se de ter as seguintes ferramentas instaladas em s
 
 *   **Java 17** ou superior
 
-*   **Maven 3.6+** (se não estiver usando o Maven Wrapper)
+*   **Maven 3.6+**
 
 *   **Docker**
 
 *   **Docker Compose**
+
+*   **Make** (para utilizar o Makefile)
 
 ## Tecnologias Utilizadas
 
@@ -61,37 +61,15 @@ Clone o repositório para sua máquina local:
 ```
 git clone https://github.com/felipesilvaibi/java-web-udesc.git
 cd java-web-udesc
-
 ```
-
-### Configuração de Variáveis de Ambiente
-
-A aplicação utiliza variáveis de ambiente para configurar a conexão com o banco de dados. Você pode definir essas variáveis em um arquivo `.env` na raiz do projeto ou diretamente no ambiente do sistema.
-
-**Criando um arquivo `.env`**:
-
-Crie um arquivo chamado `.env` na raiz do projeto com o seguinte conteúdo:
-
-```
-# Configurações do Banco de Dados
-POSTGRES_USER=myuser
-POSTGRES_PASSWORD=mypassword
-POSTGRES_DB=mydatabase
-
-# Configurações da Aplicação
-SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/mydatabase
-SPRING_DATASOURCE_USERNAME=myuser
-SPRING_DATASOURCE_PASSWORD=mypassword
-
-```
-
-**Observação**: Certifique-se de que as credenciais definidas no `.env` correspondem às utilizadas no arquivo `docker-compose.yml`.
 
 ## Construção e Execução
 
-O projeto inclui um `Makefile` que simplifica a execução de comandos comuns. Abaixo estão os comandos principais para construir e executar a aplicação.
+O projeto inclui um **Makefile** que simplifica a execução de comandos comuns para construção e execução da aplicação.
 
 ### Comandos Principais
+
+Aqui estão os comandos disponíveis no Makefile:
 
 *   **Iniciar apenas o banco de dados**:
 
@@ -115,7 +93,7 @@ O projeto inclui um `Makefile` que simplifica a execução de comandos comuns. A
     make start-app
     ```
 
-    Inicia o serviço da aplicação Spring Boot. Este comando também irá iniciar o banco de dados se ele ainda não estiver em execução.
+    Inicia o serviço da aplicação Spring Boot. Este comando também irá construir a imagem da aplicação se ainda não existir.
 
 *   **Iniciar o banco de dados e a aplicação**:
 
@@ -154,6 +132,14 @@ O projeto inclui um `Makefile` que simplifica a execução de comandos comuns. A
     ```
 
     Este comando para todos os serviços e remove os containers e volumes associados.
+
+*   **Ver ajuda dos comandos**:
+
+    ```
+    make help
+    ```
+
+    Exibe a lista de comandos disponíveis.
 
 ## Acessando a Aplicação
 
@@ -199,7 +185,7 @@ make clean
     docker compose logs -f db
     ```
 
-*   **Acesso ao Banco de Dados**: Você pode acessar o banco de dados usando uma ferramenta como o `psql` ou um cliente gráfico como o DBeaver. As credenciais são as definidas no arquivo `.env`.
+*   **Acesso ao Banco de Dados**: Você pode acessar o banco de dados usando uma ferramenta como o `psql` ou um cliente gráfico como o DBeaver. As credenciais estão definidas no arquivo `docker-compose.yml`.
 
     **Exemplo usando `psql`**:
 
@@ -219,11 +205,35 @@ make clean
     make start-app
     ```
 
-*   **Variáveis de Ambiente Sensíveis**: Nunca comite o arquivo `.env` com credenciais reais em um repositório público. Adicione o `.env` ao seu `.gitignore`:
+*   **Perfis do Spring Boot**: A aplicação utiliza perfis para separar as configurações de desenvolvimento e produção.
 
-    ```
-    .env
-    ```
+    *   **Desenvolvimento**:
+
+        *   Perfil ativo: `dev` (definido no `pom.xml` e no `application.properties`).
+
+        *   Configurações em `application-dev.properties`.
+
+        *   O banco de dados local é acessado via `localhost`.
+
+        *   **Execução em ambiente de desenvolvimento**: Você pode executar a aplicação localmente, sem Docker, usando:
+
+            ```
+            mvn spring-boot:run
+            ```
+
+        *   Certifique-se de ter uma instância do PostgreSQL rodando localmente ou ajuste as configurações conforme necessário.
+
+    *   **Produção**:
+
+        *   Perfil ativo: `prod` (definido via variável de ambiente `SPRING_PROFILES_ACTIVE` no `docker-compose.yml`).
+
+        *   Configurações em `application-prod.properties`.
+
+        *   As variáveis de ambiente para conexão ao banco de dados são definidas no `docker-compose.yml`.
+
+*   **Variáveis de Ambiente Sensíveis**: As credenciais e informações sensíveis estão definidas no `docker-compose.yml`. Certifique-se de não expor informações confidenciais em repositórios públicos. Ajuste as credenciais conforme necessário para seu ambiente.
+
+*   **Makefile**: O Makefile facilita a execução de comandos comuns. Certifique-se de ter o **Make** instalado em seu sistema. No Windows, você pode utilizar o WSL ou instalar o Make via Git Bash ou outras ferramentas.
 
 ## Licença
 
