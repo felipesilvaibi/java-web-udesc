@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
+		<activatedProperties>dev</activatedProperties>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -52,12 +53,37 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.yml</include>
+				</includes>
+				<!-- Habilita a filtragem de recursos -->
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
+			<!-- Plugin do Spring Boot -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<!-- Plugin para substituição de propriedades -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<!-- Define o encoding dos recursos -->
+					<encoding>UTF-8</encoding>
+					<!-- Habilita a filtragem de propriedades -->
+					<useDefaultFilterWrappers>true</useDefaultFilterWrappers>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+
 
 </project>
