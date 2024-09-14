@@ -35,3 +35,6 @@ build/
 ### App ###
 *.log
 *.pid
+
+### HTTP Test ###
+*.http

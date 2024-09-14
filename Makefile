@@ -1,6 +1,6 @@
 # Makefile para inicializar o banco de dados e a aplicação
 
-.PHONY: help start-db stop-db restart-db build-app start-app stop-app start stop clean
+.PHONY: help start-db stop-db restart-db build-app start-app stop-app start stop restart clean
 
 # Variáveis
 DOCKER_COMPOSE_FILE=docker-compose.yml
@@ -16,6 +16,7 @@ help:
 	@echo "  make stop-app     - Para a aplicação Spring Boot"
 	@echo "  make start        - Inicia o banco de dados e a aplicação"
 	@echo "  make stop         - Para o banco de dados e a aplicação"
+	@echo "  make restart      - Reinicia o banco de dados e a aplicação"
 	@echo "  make clean        - Limpa containers e volumes Docker"
 
 start-db:
@@ -43,6 +44,8 @@ stop-app:
 start: start-db start-app
 
 stop: stop-app stop-db
+
+restart: stop start
 
 clean: stop
 	@echo "Removendo containers e volumes Docker..."
