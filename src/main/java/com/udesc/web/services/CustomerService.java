@@ -1,6 +1,8 @@
 package com.udesc.web.services;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -37,5 +39,9 @@ public class CustomerService {
 
     public List<CustomerModel> findAll() {
         return customerRepository.findAll();
+    }
+
+    public Optional<CustomerModel> findById(UUID id) {
+        return customerRepository.findById(id);
     }
 }
