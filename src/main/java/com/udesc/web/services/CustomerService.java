@@ -1,5 +1,7 @@
 package com.udesc.web.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.udesc.web.models.CustomerModel;
@@ -31,5 +33,9 @@ public class CustomerService {
 
     public boolean existsByPhone(String phone) {
         return customerRepository.existsByPhone(phone);
+    }
+
+    public List<CustomerModel> findAll() {
+        return customerRepository.findAll();
     }
 }

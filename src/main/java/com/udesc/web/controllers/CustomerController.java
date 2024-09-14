@@ -2,11 +2,13 @@ package com.udesc.web.controllers;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +49,11 @@ public class CustomerController {
         BeanUtils.copyProperties(customerDto, customerModel);
         customerModel.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
         return ResponseEntity.status(HttpStatus.CREATED).body(customerService.create(customerModel));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CustomerModel>> getCustomers() {
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.findAll());
     }
 
 }
