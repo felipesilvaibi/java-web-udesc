@@ -59,8 +59,8 @@ Antes de começar, certifique-se de ter as seguintes ferramentas instaladas em s
 Clone o repositório para sua máquina local:
 
 ```
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/felipesilvaibi/java-web-udesc.git
+cd java-web-udesc
 
 ```
 
@@ -97,7 +97,6 @@ O projeto inclui um `Makefile` que simplifica a execução de comandos comuns. A
 
     ```
     make start-db
-
     ```
 
     Este comando inicia o serviço do PostgreSQL usando Docker Compose.
@@ -106,7 +105,6 @@ O projeto inclui um `Makefile` que simplifica a execução de comandos comuns. A
 
     ```
     make build-app
-
     ```
 
     Compila a aplicação e constrói a imagem Docker correspondente.
@@ -115,7 +113,6 @@ O projeto inclui um `Makefile` que simplifica a execução de comandos comuns. A
 
     ```
     make start-app
-
     ```
 
     Inicia o serviço da aplicação Spring Boot. Este comando também irá iniciar o banco de dados se ele ainda não estiver em execução.
@@ -124,7 +121,6 @@ O projeto inclui um `Makefile` que simplifica a execução de comandos comuns. A
 
     ```
     make start
-
     ```
 
     Inicia ambos os serviços: banco de dados e aplicação.
@@ -133,7 +129,6 @@ O projeto inclui um `Makefile` que simplifica a execução de comandos comuns. A
 
     ```
     make stop-app
-
     ```
 
     Para o serviço da aplicação.
@@ -142,7 +137,6 @@ O projeto inclui um `Makefile` que simplifica a execução de comandos comuns. A
 
     ```
     make stop-db
-
     ```
 
     Para o serviço do banco de dados PostgreSQL.
@@ -151,14 +145,12 @@ O projeto inclui um `Makefile` que simplifica a execução de comandos comuns. A
 
     ```
     make stop
-
     ```
 
 *   **Limpar containers e volumes Docker**:
 
     ```
     make clean
-
     ```
 
     Este comando para todos os serviços e remove os containers e volumes associados.
@@ -169,7 +161,6 @@ Após iniciar a aplicação, você pode acessá-la através do seguinte endereç
 
 ```
 http://localhost:8080
-
 ```
 
 Certifique-se de que a porta `8080` não esteja sendo utilizada por outro serviço em sua máquina.
@@ -180,7 +171,6 @@ Para parar a aplicação e o banco de dados, você pode utilizar o comando:
 
 ```
 make stop
-
 ```
 
 Isso irá parar ambos os serviços. Se você quiser parar apenas um dos serviços, use `make stop-app` ou `make stop-db`.
@@ -191,7 +181,6 @@ Para limpar os containers Docker, volumes e arquivos de log, utilize:
 
 ```
 make clean
-
 ```
 
 **Atenção**: Este comando removerá os dados persistidos no volume do PostgreSQL. Use com cautela se não quiser perder os dados armazenados.
@@ -202,14 +191,12 @@ make clean
 
     ```
     docker compose logs -f app
-
     ```
 
 *   **Logs do Banco de Dados**: Para visualizar os logs do PostgreSQL:
 
     ```
     docker compose logs -f db
-
     ```
 
 *   **Acesso ao Banco de Dados**: Você pode acessar o banco de dados usando uma ferramenta como o `psql` ou um cliente gráfico como o DBeaver. As credenciais são as definidas no arquivo `.env`.
@@ -218,28 +205,24 @@ make clean
 
     ```
     psql -h localhost -p 5432 -U myuser -d mydatabase
-
     ```
 
 *   **Recompilação da Aplicação**: Sempre que fizer alterações no código-fonte, reconstrua a imagem da aplicação:
 
     ```
     make build-app
-
     ```
 
     Em seguida, reinicie a aplicação:
 
     ```
     make start-app
-
     ```
 
 *   **Variáveis de Ambiente Sensíveis**: Nunca comite o arquivo `.env` com credenciais reais em um repositório público. Adicione o `.env` ao seu `.gitignore`:
 
     ```
     .env
-
     ```
 
 ## Licença
