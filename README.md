@@ -190,7 +190,7 @@ make clean
     **Exemplo usando `psql`**:
 
     ```
-    psql -h localhost -p 5432 -U myuser -d mydatabase
+    psql -h localhost -p 5432 -U myuser -d dvdrental
     ```
 
 *   **Recompilação da Aplicação**: Sempre que fizer alterações no código-fonte, reconstrua a imagem da aplicação:
