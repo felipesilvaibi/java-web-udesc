@@ -21,7 +21,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public Object create(CustomerModel customerModel) {
+    public Object save(CustomerModel customerModel) {
         return customerRepository.save(customerModel);
     }
 
