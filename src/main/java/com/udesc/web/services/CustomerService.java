@@ -44,4 +44,9 @@ public class CustomerService {
     public Optional<CustomerModel> findById(UUID id) {
         return customerRepository.findById(id);
     }
+
+    @Transactional
+    public void delete(CustomerModel customerModel) {
+        customerRepository.delete(customerModel);
+    }
 }
