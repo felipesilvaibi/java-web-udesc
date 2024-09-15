@@ -1,9 +1,10 @@
 package com.udesc.web.services;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.udesc.web.models.CustomerModel;
@@ -37,8 +38,8 @@ public class CustomerService {
         return customerRepository.existsByPhone(phone);
     }
 
-    public List<CustomerModel> findAll() {
-        return customerRepository.findAll();
+    public Page<CustomerModel> findAll(Pageable pageable) {
+        return customerRepository.findAll(pageable);
     }
 
     public Optional<CustomerModel> findById(UUID id) {
