@@ -1,0 +1,40 @@
+package com.udesc.web.controllers;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.udesc.web.dtos.ActorDto;
+import com.udesc.web.models.ActorModel;
+import com.udesc.web.services.ActorService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RequestMapping("/actor")
+public class ActorController {
+
+    final ActorService actorService;
+
+    public ActorController(ActorService actorService) {
+        this.actorService = actorService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Object> createActor(@RequestBody @Valid ActorDto actorDto) {
+        var actorModel = new ActorModel();
+        BeanUtils.copyProperties(actorDto, actorModel);
+        actorModel.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+        return ResponseEntity.status(HttpStatus.CREATED).body(actorService.save(actorModel));
+    }
+
+}
