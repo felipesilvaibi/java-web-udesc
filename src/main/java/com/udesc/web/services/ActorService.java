@@ -34,4 +34,9 @@ public class ActorService {
         return actorRepository.findById(id);
     }
 
+    @Transactional
+    public void delete(ActorModel actorModel) {
+        actorRepository.delete(actorModel);
+    }
+
 }
