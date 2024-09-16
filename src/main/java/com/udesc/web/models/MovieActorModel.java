@@ -2,22 +2,24 @@ package com.udesc.web.models;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
-import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "tb_actor")
-public class ActorModel implements Serializable {
+@Table(name = "tb_movie_actor", uniqueConstraints = { @UniqueConstraint(columnNames = { "movie_id", "actor_id" }) })
+public class MovieActorModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,14 +27,15 @@ public class ActorModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false, length = 32)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "movie_id")
+    @JsonBackReference
+    private MovieModel movie;
 
-    @Column(nullable = false, length = 32)
-    private String nationality;
-
-    @OneToMany(mappedBy = "actor", cascade = CascadeType.ALL)
-    private Set<MovieActorModel> movieActors = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "actor_id")
+    @JsonBackReference
+    private ActorModel actor;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -40,7 +43,9 @@ public class ActorModel implements Serializable {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    public ActorModel() {
+    public MovieActorModel(MovieModel movie, ActorModel actor) {
+        this.movie = movie;
+        this.actor = actor;
     }
 
     public UUID getId() {
@@ -51,28 +56,20 @@ public class ActorModel implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public MovieModel getMovie() {
+        return movie;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMovie(MovieModel movie) {
+        this.movie = movie;
     }
 
-    public String getNationality() {
-        return nationality;
+    public ActorModel getActor() {
+        return actor;
     }
 
-    public void setNationality(String nationality) {
-        this.nationality = nationality;
-    }
-
-    public Set<MovieActorModel> getMovieActors() {
-        return movieActors;
-    }
-
-    public void setMovieActors(Set<MovieActorModel> movieActors) {
-        this.movieActors = movieActors;
+    public void setActor(ActorModel actor) {
+        this.actor = actor;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -90,4 +87,5 @@ public class ActorModel implements Serializable {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
 }
