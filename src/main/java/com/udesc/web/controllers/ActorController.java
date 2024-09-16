@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,7 +43,11 @@ public class ActorController {
     public ResponseEntity<Object> createActor(@RequestBody @Valid ActorDto actorDto) {
         var actorModel = new ActorModel();
         BeanUtils.copyProperties(actorDto, actorModel);
-        actorModel.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+
+        var localDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+        actorModel.setCreatedAt(localDateTime);
+        actorModel.setUpdatedAt(localDateTime);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(actorService.save(actorModel));
     }
 
@@ -72,6 +77,25 @@ public class ActorController {
 
         actorService.delete(actorModelOptional.get());
         return ResponseEntity.status(HttpStatus.OK).body("Actor deleted successfully");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateActorById(@PathVariable(value = "id") UUID id,
+            @RequestBody @Valid ActorDto actorDto) {
+        Optional<ActorModel> actorModelOptional = actorService.findById(id);
+
+        if (!actorModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Actor not found");
+        }
+
+        var actorModel = new ActorModel();
+        BeanUtils.copyProperties(actorDto, actorModel);
+
+        actorModel.setId(id);
+        actorModel.setCreatedAt(actorModelOptional.get().getCreatedAt());
+        actorModel.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+
+        return ResponseEntity.status(HttpStatus.OK).body(actorService.save(actorModel));
     }
 
 }
