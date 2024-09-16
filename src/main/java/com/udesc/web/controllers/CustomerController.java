@@ -55,7 +55,11 @@ public class CustomerController {
 
         var customerModel = new CustomerModel();
         BeanUtils.copyProperties(customerDto, customerModel);
-        customerModel.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+
+        var localDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+        customerModel.setCreatedAt(localDateTime);
+        customerModel.setUpdatedAt(localDateTime);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(customerService.save(customerModel));
     }
 
@@ -98,8 +102,10 @@ public class CustomerController {
 
         var customerModel = new CustomerModel();
         BeanUtils.copyProperties(customerDto, customerModel);
+
         customerModel.setId(id);
         customerModel.setCreatedAt(customerModelOptional.get().getCreatedAt());
+        customerModel.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
 
         return ResponseEntity.status(HttpStatus.OK).body(customerService.save(customerModel));
     }
