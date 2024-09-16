@@ -45,6 +45,9 @@ public class CustomerModel implements Serializable {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    public CustomerModel() {
+    }
+
     public UUID getId() {
         return id;
     }
