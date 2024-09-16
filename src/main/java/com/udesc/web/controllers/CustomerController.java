@@ -61,7 +61,7 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<Page<CustomerModel>> getCustomers(
-            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(customerService.findAll(pageable));
     }
 
