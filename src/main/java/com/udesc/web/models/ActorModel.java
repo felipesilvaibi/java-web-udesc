@@ -66,7 +66,6 @@ public class ActorModel implements Serializable {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-        this.updatedAt = createdAt;
     }
 
     public LocalDateTime getUpdatedAt() {
