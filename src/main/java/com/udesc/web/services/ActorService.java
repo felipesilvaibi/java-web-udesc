@@ -1,5 +1,7 @@
 package com.udesc.web.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.udesc.web.models.ActorModel;
@@ -19,6 +21,10 @@ public class ActorService {
     @Transactional
     public Object save(ActorModel actorModel) {
         return actorRepository.save(actorModel);
+    }
+
+    public Page<ActorModel> findAll(Pageable pageable) {
+        return actorRepository.findAll(pageable);
     }
 
 }
