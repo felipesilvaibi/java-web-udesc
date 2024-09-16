@@ -1,5 +1,8 @@
 package com.udesc.web.services;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,10 @@ public class ActorService {
 
     public Page<ActorModel> findAll(Pageable pageable) {
         return actorRepository.findAll(pageable);
+    }
+
+    public Optional<ActorModel> findById(UUID id) {
+        return actorRepository.findById(id);
     }
 
 }
