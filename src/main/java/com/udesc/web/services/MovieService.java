@@ -1,5 +1,8 @@
 package com.udesc.web.services;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,10 @@ public class MovieService {
 
     public Page<MovieModel> findAll(Pageable pageable) {
         return movieRepository.findAll(pageable);
+    }
+
+    public Optional<MovieModel> findById(UUID id) {
+        return movieRepository.findById(id);
     }
 
 }
