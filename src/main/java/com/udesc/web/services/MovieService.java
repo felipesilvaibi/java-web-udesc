@@ -34,4 +34,9 @@ public class MovieService {
         return movieRepository.findById(id);
     }
 
+    @Transactional
+    public void delete(MovieModel movieModel) {
+        movieRepository.delete(movieModel);
+    }
+
 }
