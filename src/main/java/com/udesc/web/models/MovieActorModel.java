@@ -43,6 +43,9 @@ public class MovieActorModel implements Serializable {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    public MovieActorModel() {
+    }
+
     public MovieActorModel(MovieModel movie, ActorModel actor) {
         this.movie = movie;
         this.actor = actor;

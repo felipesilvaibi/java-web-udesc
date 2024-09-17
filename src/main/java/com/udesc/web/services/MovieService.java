@@ -1,5 +1,7 @@
 package com.udesc.web.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.udesc.web.models.MovieModel;
@@ -19,6 +21,10 @@ public class MovieService {
     @Transactional
     public Object save(MovieModel movieModel) {
         return movieRepository.save(movieModel);
+    }
+
+    public Page<MovieModel> findAll(Pageable pageable) {
+        return movieRepository.findAll(pageable);
     }
 
 }
