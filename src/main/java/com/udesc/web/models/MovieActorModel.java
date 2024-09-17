@@ -2,6 +2,7 @@ package com.udesc.web.models;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -89,6 +90,22 @@ public class MovieActorModel implements Serializable {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        MovieActorModel that = (MovieActorModel) o;
+        return Objects.equals(movie.getId(), that.movie.getId()) &&
+                Objects.equals(actor.getId(), that.actor.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(movie.getId(), actor.getId());
     }
 
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -88,6 +89,25 @@ public class MovieController {
 
         movieService.delete(movieModelOptional.get());
         return ResponseEntity.status(HttpStatus.OK).body("Movie deleted successfully");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateMovieById(@PathVariable(value = "id") UUID id,
+            @RequestBody @Valid MovieDto movieDto) {
+        Optional<MovieModel> movieModelOptional = movieService.findById(id);
+
+        if (!movieModelOptional.isPresent()) {
+            throw new RuntimeException("Movie not found");
+        }
+
+        MovieModel movieModel = movieModelOptional.get();
+        BeanUtils.copyProperties(movieDto, movieModel, "movieActors");
+
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+        movieModel.setUpdatedAt(localDateTime);
+        movieModel.getMovieActors().clear();
+
+        return ResponseEntity.status(HttpStatus.OK).body(movieService.updateMovie(movieModel, movieDto.getActorIds()));
     }
 
 }
