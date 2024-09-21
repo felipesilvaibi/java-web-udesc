@@ -68,9 +68,6 @@ public class RentalController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("No available stock for this movie");
         }
 
-        stock.setRented(stock.getRented() + 1);
-        stockService.save(stock);
-
         RentalModel rentalModel = new RentalModel();
         rentalModel.setCustomer(customerOptional.get());
         rentalModel.setStock(stock);
@@ -113,9 +110,6 @@ public class RentalController {
         }
 
         RentalModel rentalModel = rentalOptional.get();
-        StockModel stock = rentalModel.getStock();
-        stock.setRented(stock.getRented() - 1);
-        stockService.save(stock);
 
         rentalService.delete(rentalModel);
         return ResponseEntity.status(HttpStatus.OK).body("Rental deleted successfully");

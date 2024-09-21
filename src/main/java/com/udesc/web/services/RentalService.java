@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.udesc.web.models.RentalModel;
+import com.udesc.web.models.StockModel;
 import com.udesc.web.repositories.RentalRepository;
 
 import jakarta.transaction.Transactional;
@@ -16,13 +17,19 @@ import jakarta.transaction.Transactional;
 public class RentalService {
 
     final RentalRepository rentalRepository;
+    final StockService stockService;
 
-    public RentalService(RentalRepository rentalRepository) {
+    public RentalService(RentalRepository rentalRepository, StockService stockService) {
         this.rentalRepository = rentalRepository;
+        this.stockService = stockService;
     }
 
     @Transactional
     public RentalModel save(RentalModel rentalModel) {
+        StockModel stock = rentalModel.getStock();
+        stock.setRented(stock.getRented() + 1);
+        stockService.save(stock);
+
         return rentalRepository.save(rentalModel);
     }
 
@@ -36,6 +43,10 @@ public class RentalService {
 
     @Transactional
     public void delete(RentalModel rentalModel) {
+        StockModel stock = rentalModel.getStock();
+        stock.setRented(stock.getRented() - 1);
+        stockService.save(stock);
+
         rentalRepository.delete(rentalModel);
     }
 
