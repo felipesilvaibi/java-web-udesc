@@ -43,4 +43,9 @@ public class StockService {
         return stockRepository.findById(id);
     }
 
+    @Transactional
+    public void delete(StockModel stockModel) {
+        stockRepository.delete(stockModel);
+    }
+
 }

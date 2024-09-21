@@ -13,6 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -78,6 +79,16 @@ public class StockController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Stock not found");
         }
         return ResponseEntity.status(HttpStatus.OK).body(stockOptional.get());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteStockById(@PathVariable(value = "id") UUID id) {
+        Optional<StockModel> stockOptional = stockService.findById(id);
+        if (!stockOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Stock not found");
+        }
+        stockService.delete(stockOptional.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Stock deleted successfully");
     }
 
 }
