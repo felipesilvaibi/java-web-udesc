@@ -1,6 +1,7 @@
 package com.udesc.web.services;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,10 @@ public class StockService {
 
     public Page<StockModel> findAll(Pageable pageable) {
         return stockRepository.findAll(pageable);
+    }
+
+    public Optional<StockModel> findById(UUID id) {
+        return stockRepository.findById(id);
     }
 
 }
