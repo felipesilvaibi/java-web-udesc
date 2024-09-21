@@ -1,0 +1,60 @@
+package com.udesc.web.controllers;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Optional;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.udesc.web.dtos.StockDto;
+import com.udesc.web.models.MovieModel;
+import com.udesc.web.models.StockModel;
+import com.udesc.web.services.MovieService;
+import com.udesc.web.services.StockService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RequestMapping("/stock")
+public class StockController {
+
+    final StockService stockService;
+    final MovieService movieService;
+
+    public StockController(StockService stockService, MovieService movieService) {
+        this.stockService = stockService;
+        this.movieService = movieService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Object> createStock(@RequestBody @Valid StockDto stockDto) {
+        Optional<MovieModel> movieOptional = movieService.findById(stockDto.getMovieId());
+        if (!movieOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Movie not found");
+        }
+
+        MovieModel movie = movieOptional.get();
+
+        if (stockService.existsByMovie(movie)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Stock already exists for this movie");
+        }
+
+        var stockModel = new StockModel();
+        BeanUtils.copyProperties(stockDto, stockModel);
+        stockModel.setMovie(movie);
+
+        var localDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+        stockModel.setCreatedAt(localDateTime);
+        stockModel.setUpdatedAt(localDateTime);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(stockService.save(stockModel));
+    }
+}
