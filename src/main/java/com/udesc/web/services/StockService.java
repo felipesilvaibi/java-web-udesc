@@ -2,6 +2,8 @@ package com.udesc.web.services;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.udesc.web.models.MovieModel;
@@ -31,4 +33,9 @@ public class StockService {
     public boolean existsByMovie(MovieModel movie) {
         return stockRepository.existsByMovie(movie);
     }
+
+    public Page<StockModel> findAll(Pageable pageable) {
+        return stockRepository.findAll(pageable);
+    }
+
 }
