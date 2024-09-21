@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -89,6 +90,33 @@ public class StockController {
         }
         stockService.delete(stockOptional.get());
         return ResponseEntity.status(HttpStatus.OK).body("Stock deleted successfully");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateStockById(@PathVariable(value = "id") UUID id,
+            @RequestBody @Valid StockDto stockDto) {
+        Optional<StockModel> stockOptional = stockService.findById(id);
+        if (!stockOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Stock not found");
+        }
+
+        Optional<MovieModel> movieOptional = movieService.findById(stockDto.getMovieId());
+        if (!movieOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Movie not found");
+        }
+
+        MovieModel movie = movieOptional.get();
+
+        if (!stockOptional.get().getMovie().getId().equals(movie.getId()) && stockService.existsByMovie(movie)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Stock already exists for this movie");
+        }
+
+        var stockModel = stockOptional.get();
+        BeanUtils.copyProperties(stockDto, stockModel);
+        stockModel.setMovie(movie);
+        stockModel.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+
+        return ResponseEntity.status(HttpStatus.OK).body(stockService.save(stockModel));
     }
 
 }
