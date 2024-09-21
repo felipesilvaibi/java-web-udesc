@@ -34,4 +34,9 @@ public class RentalService {
         return rentalRepository.findById(id);
     }
 
+    @Transactional
+    public void delete(RentalModel rentalModel) {
+        rentalRepository.delete(rentalModel);
+    }
+
 }

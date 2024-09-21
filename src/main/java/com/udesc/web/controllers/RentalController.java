@@ -13,6 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -102,6 +103,22 @@ public class RentalController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rental not found");
         }
         return ResponseEntity.status(HttpStatus.OK).body(rentalOptional.get());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteRentalById(@PathVariable(value = "id") UUID id) {
+        Optional<RentalModel> rentalOptional = rentalService.findById(id);
+        if (!rentalOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rental not found");
+        }
+
+        RentalModel rentalModel = rentalOptional.get();
+        StockModel stock = rentalModel.getStock();
+        stock.setRented(stock.getRented() - 1);
+        stockService.save(stock);
+
+        rentalService.delete(rentalModel);
+        return ResponseEntity.status(HttpStatus.OK).body("Rental deleted successfully");
     }
 
 }
