@@ -27,6 +27,11 @@ public class RentalService {
     @Transactional
     public RentalModel save(RentalModel rentalModel) {
         StockModel stock = rentalModel.getStock();
+
+        if (stock.getQuantity() - stock.getRented() <= 0) {
+            throw new RuntimeException("No available stock for this movie");
+        }
+
         stock.setRented(stock.getRented() + 1);
         stockService.save(stock);
 
@@ -48,6 +53,32 @@ public class RentalService {
         stockService.save(stock);
 
         rentalRepository.delete(rentalModel);
+    }
+
+    @Transactional
+    public RentalModel update(RentalModel existingRental, RentalModel updatedRental) {
+        StockModel oldStock = existingRental.getStock();
+        StockModel newStock = updatedRental.getStock();
+
+        if (!oldStock.getId().equals(newStock.getId())) {
+            oldStock.setRented(oldStock.getRented() - 1);
+            stockService.save(oldStock);
+
+            if (newStock.getQuantity() - newStock.getRented() <= 0) {
+                throw new RuntimeException("No available stock for this movie");
+            }
+
+            newStock.setRented(newStock.getRented() + 1);
+            stockService.save(newStock);
+        }
+
+        existingRental.setCustomer(updatedRental.getCustomer());
+        existingRental.setStock(newStock);
+        existingRental.setRentalDate(updatedRental.getRentalDate());
+        existingRental.setReturnDate(updatedRental.getReturnDate());
+        existingRental.setUpdatedAt(updatedRental.getUpdatedAt());
+
+        return rentalRepository.save(existingRental);
     }
 
 }

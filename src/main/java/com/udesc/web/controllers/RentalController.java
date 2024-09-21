@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,15 +63,9 @@ public class RentalController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Stock not found");
         }
 
-        StockModel stock = stockOptional.get();
-
-        if (stock.getQuantity() - stock.getRented() <= 0) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("No available stock for this movie");
-        }
-
         RentalModel rentalModel = new RentalModel();
         rentalModel.setCustomer(customerOptional.get());
-        rentalModel.setStock(stock);
+        rentalModel.setStock(stockOptional.get());
 
         LocalDate rentalDate = LocalDate.parse(rentalDto.getRentalDate());
         rentalModel.setRentalDate(rentalDate);
@@ -84,7 +79,12 @@ public class RentalController {
         rentalModel.setCreatedAt(now);
         rentalModel.setUpdatedAt(now);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(rentalService.save(rentalModel));
+        try {
+            RentalModel savedRental = rentalService.save(rentalModel);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedRental);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 
     @GetMapping
@@ -109,10 +109,55 @@ public class RentalController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rental not found");
         }
 
-        RentalModel rentalModel = rentalOptional.get();
+        try {
+            rentalService.delete(rentalOptional.get());
+            return ResponseEntity.status(HttpStatus.OK).body("Rental deleted successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+    }
 
-        rentalService.delete(rentalModel);
-        return ResponseEntity.status(HttpStatus.OK).body("Rental deleted successfully");
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateRentalById(@PathVariable(value = "id") UUID id,
+            @RequestBody @Valid RentalDto rentalDto) {
+        Optional<RentalModel> rentalOptional = rentalService.findById(id);
+        if (!rentalOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rental not found");
+        }
+
+        Optional<CustomerModel> customerOptional = customerService.findById(rentalDto.getCustomerId());
+        if (!customerOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found");
+        }
+
+        Optional<StockModel> stockOptional = stockService.findById(rentalDto.getStockId());
+        if (!stockOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Stock not found");
+        }
+
+        RentalModel existingRental = rentalOptional.get();
+        RentalModel updatedRental = new RentalModel();
+        updatedRental.setId(existingRental.getId());
+        updatedRental.setCustomer(customerOptional.get());
+        updatedRental.setStock(stockOptional.get());
+
+        LocalDate rentalDate = LocalDate.parse(rentalDto.getRentalDate());
+        updatedRental.setRentalDate(rentalDate);
+
+        if (rentalDto.getReturnDate() != null) {
+            LocalDate returnDate = LocalDate.parse(rentalDto.getReturnDate());
+            updatedRental.setReturnDate(returnDate);
+        }
+
+        updatedRental.setCreatedAt(existingRental.getCreatedAt());
+        updatedRental.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+
+        try {
+            RentalModel savedRental = rentalService.update(existingRental, updatedRental);
+            return ResponseEntity.status(HttpStatus.OK).body(savedRental);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 
 }
