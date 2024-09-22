@@ -1,0 +1,35 @@
+### CREATE
+
+POST http://localhost:8080/actor HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Ryan Reynolds",
+    "nationality": "Canadian"
+}
+
+### GET ALL PAGINATED (DEFAULT PAGE 0 AND SIZE 10)
+
+GET http://localhost:8080/actor HTTP/1.1
+
+### GET ALL PAGINATED
+
+GET http://localhost:8080/actor?page=0&size=2 HTTP/1.1
+
+### GET BY ID
+
+GET http://localhost:8080/actor/058789c7-22a8-4ae9-8f8e-5bd65b4a344a HTTP/1.1
+
+### DELETE BY ID
+
+DELETE http://localhost:8080/actor/dd9fe5aa-59a2-4cc2-9eb3-2fb8b93ba39f HTTP/1.1
+
+### UPDATE BY ID
+
+PUT http://localhost:8080/actor/058789c7-22a8-4ae9-8f8e-5bd65b4a344a HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Wagner Moura",
+    "nationality": "Brazilian"
+}

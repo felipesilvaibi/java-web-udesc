@@ -1,0 +1,43 @@
+### CREATE
+
+POST http://localhost:8080/movie HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Java Web sem Atores",
+  "genre": "Ficção Científica",
+  "synopsis": "Lorem Ipsum.",
+  "duration": 120
+}
+
+### GET ALL PAGINATED (DEFAULT PAGE 0 AND SIZE 10)
+
+GET http://localhost:8080/movie HTTP/1.1
+
+### GET ALL PAGINATED
+
+GET http://localhost:8080/movie?page=0&size=1 HTTP/1.1
+
+### GET BY ID
+
+GET http://localhost:8080/movie/5b0fa523-9b0f-476a-b1a6-d1c4d5ebb815 HTTP/1.1
+
+### DELETE BY ID
+
+DELETE http://localhost:8080/movie/88232954-8893-4078-967f-596a8610afca HTTP/1.1
+
+### UPDATE BY ID
+
+PUT http://localhost:8080/movie/5b0fa523-9b0f-476a-b1a6-d1c4d5ebb815 HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Java Web",
+  "genre": "Ficção Científica",
+  "synopsis": "Lorem Ipsum.",
+  "duration": 120,
+  "actorIds": [
+      "19952fbd-289f-4296-b06a-db07ebb600ba",
+      "53090cc6-dace-4fef-ac6e-69a259f2ba7f"
+  ]
+}

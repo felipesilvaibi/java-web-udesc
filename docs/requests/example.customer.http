@@ -1,0 +1,43 @@
+### CREATE
+
+POST http://localhost:8080/customer HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Udesc Teste",
+    "cpf": "12345678914",
+    "email": "udesc_test@gmail.com",
+    "phone": "47992874528",
+    "address": "Rua Teste",
+    "birthDate": "2000-01-01"
+}
+
+### GET ALL PAGINATED (DEFAULT PAGE 0 AND SIZE 10)
+
+GET http://localhost:8080/customer HTTP/1.1
+
+### GET ALL PAGINATED
+
+GET http://localhost:8080/customer?page=0&size=2 HTTP/1.1
+
+### GET BY ID
+
+GET http://localhost:8080/customer/0cba643a-4eba-4a0e-aefe-af0e4fd2d9b8 HTTP/1.1
+
+### DELETE BY ID
+
+DELETE http://localhost:8080/customer/da6c79b9-031c-4e63-81d9-42799cdd46a6 HTTP/1.1
+
+### UPDATE BY ID
+
+PUT http://localhost:8080/customer/030ec5eb-cd4d-4033-b48a-e6f4219ccfaf HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Felipe",
+    "cpf": "12345678913",
+    "email": "udesc_teste@gmail.com",
+    "phone": "47992874522",
+    "address": "Rua Teste",
+    "birthDate": "2000-01-01"
+}
