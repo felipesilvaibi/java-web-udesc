@@ -1,8 +1,10 @@
-# Projeto Web Application com Spring Boot e PostgreSQL
+# Projeto Aplicação Web com Spring Boot e PostgreSQL
 
-Este projeto é uma aplicação web desenvolvida em Java utilizando o framework Spring Boot. A aplicação faz uso do Spring Data JPA para interagir com um banco de dados PostgreSQL e está containerizada utilizando Docker e Docker Compose para facilitar a implantação e execução. O projeto inclui um **Makefile** para simplificar a execução de comandos comuns.
+Este projeto é uma aplicação web desenvolvida em Java utilizando o framework Spring Boot. A aplicação simula um sistema de locadora de filmes, permitindo gerenciar clientes, atores, filmes, estoque e locações. Utiliza o Spring Data JPA para interagir com um banco de dados PostgreSQL e está containerizada usando Docker e Docker Compose para facilitar a implantação e execução. O projeto inclui um **Makefile** para simplificar a execução de comandos comuns.
 
 ## Índice
+
+*   [Descrição do Projeto](#descri%C3%A7%C3%A3o-do-projeto)
 
 *   [Pré-requisitos](#pr%C3%A9-requisitos)
 
@@ -16,7 +18,11 @@ Este projeto é uma aplicação web desenvolvida em Java utilizando o framework 
 
     *   [Comandos Principais](#comandos-principais)
 
-*   [Acessando a Aplicação](#acessando-a-aplica%C3%A7%C3%A3o)
+*   [Interagindo com a API](#interagindo-com-a-api)
+
+    *   [Endpoints Disponíveis](#endpoints-dispon%C3%ADveis)
+
+    *   [Exemplos de Requisições](#exemplos-de-requisi%C3%A7%C3%B5es)
 
 *   [Parando a Aplicação](#parando-a-aplica%C3%A7%C3%A3o)
 
@@ -26,9 +32,25 @@ Este projeto é uma aplicação web desenvolvida em Java utilizando o framework 
 
 *   [Licença](#licen%C3%A7a)
 
+## Descrição do Projeto
+
+A aplicação é um sistema de locadora de filmes que permite:
+
+*   **Gerenciar Clientes**: Criar, listar, atualizar e remover clientes.
+
+*   **Gerenciar Atores**: Adicionar e associar atores aos filmes.
+
+*   **Gerenciar Filmes**: Criar filmes com informações detalhadas e associar atores.
+
+*   **Gerenciar Estoque**: Controlar a quantidade de cópias disponíveis de cada filme.
+
+*   **Gerenciar Locações**: Registrar locações de filmes pelos clientes e controlar devoluções.
+
+A aplicação expõe uma API RESTful que pode ser consumida por um cliente frontend ou por ferramentas como Postman e cURL.
+
 ## Pré-requisitos
 
-Antes de começar, certifique-se de ter as seguintes ferramentas instaladas em seu ambiente de desenvolvimento:
+Antes de começar, certifique-se de ter as seguintes ferramentas instaladas:
 
 *   **Java 17** ou superior
 
@@ -69,15 +91,13 @@ O projeto inclui um **Makefile** que simplifica a execução de comandos comuns 
 
 ### Comandos Principais
 
-Aqui estão os comandos disponíveis no Makefile:
-
-*   **Iniciar apenas o banco de dados**:
+*   **Iniciar o banco de dados**:
 
     ```
     make start-db
     ```
 
-    Este comando inicia o serviço do PostgreSQL usando Docker Compose.
+    Inicia o serviço do PostgreSQL usando Docker Compose.
 
 *   **Construir a imagem da aplicação**:
 
@@ -85,23 +105,23 @@ Aqui estão os comandos disponíveis no Makefile:
     make build-app
     ```
 
-    Compila a aplicação e constrói a imagem Docker correspondente.
+    Compila a aplicação e constrói a imagem Docker.
 
-*   **Iniciar apenas a aplicação**:
+*   **Iniciar a aplicação**:
 
     ```
     make start-app
     ```
 
-    Inicia o serviço da aplicação Spring Boot. Este comando também irá construir a imagem da aplicação se ainda não existir.
+    Inicia o serviço da aplicação Spring Boot.
 
-*   **Iniciar o banco de dados e a aplicação**:
+*   **Iniciar banco de dados e aplicação**:
 
     ```
     make start
     ```
 
-    Inicia ambos os serviços: banco de dados e aplicação.
+    Inicia ambos os serviços.
 
 *   **Parar a aplicação**:
 
@@ -109,17 +129,13 @@ Aqui estão os comandos disponíveis no Makefile:
     make stop-app
     ```
 
-    Para o serviço da aplicação.
-
 *   **Parar o banco de dados**:
 
     ```
     make stop-db
     ```
 
-    Para o serviço do banco de dados PostgreSQL.
-
-*   **Parar ambos os serviços**:
+*   **Parar todos os serviços**:
 
     ```
     make stop
@@ -131,110 +147,289 @@ Aqui estão os comandos disponíveis no Makefile:
     make clean
     ```
 
-    Este comando para todos os serviços e remove os containers e volumes associados.
-
-*   **Ver ajuda dos comandos**:
+*   **Exibir ajuda**:
 
     ```
     make help
     ```
 
-    Exibe a lista de comandos disponíveis.
+## Interagindo com a API
 
-## Acessando a Aplicação
-
-Após iniciar a aplicação, você pode acessá-la através do seguinte endereço:
+Após iniciar a aplicação, você pode interagir com a API através dos endpoints disponíveis. A aplicação estará acessível em:
 
 ```
 http://localhost:8080
 ```
 
-Certifique-se de que a porta `8080` não esteja sendo utilizada por outro serviço em sua máquina.
+### Endpoints Disponíveis
+
+#### Clientes (`/customer`)
+
+*   `GET /customer`: Lista todos os clientes.
+
+*   `GET /customer/{id}`: Obtém um cliente específico.
+
+*   `POST /customer`: Cria um novo cliente.
+
+*   `PUT /customer/{id}`: Atualiza um cliente existente.
+
+*   `DELETE /customer/{id}`: Remove um cliente.
+
+#### Atores (`/actor`)
+
+*   `GET /actor`: Lista todos os atores.
+
+*   `GET /actor/{id}`: Obtém um ator específico.
+
+*   `POST /actor`: Cria um novo ator.
+
+*   `PUT /actor/{id}`: Atualiza um ator existente.
+
+*   `DELETE /actor/{id}`: Remove um ator.
+
+#### Filmes (`/movie`)
+
+*   `GET /movie`: Lista todos os filmes.
+
+*   `GET /movie/{id}`: Obtém um filme específico.
+
+*   `POST /movie`: Cria um novo filme.
+
+*   `PUT /movie/{id}`: Atualiza um filme existente.
+
+*   `DELETE /movie/{id}`: Remove um filme.
+
+#### Estoque (`/stock`)
+
+*   `GET /stock`: Lista o estoque de filmes.
+
+*   `GET /stock/{id}`: Obtém informações de estoque específicas.
+
+*   `POST /stock`: Adiciona um novo registro de estoque.
+
+*   `PUT /stock/{id}`: Atualiza um registro de estoque.
+
+*   `DELETE /stock/{id}`: Remove um registro de estoque.
+
+#### Locações (`/rental`)
+
+*   `GET /rental`: Lista todas as locações.
+
+*   `GET /rental/{id}`: Obtém uma locação específica.
+
+*   `POST /rental`: Registra uma nova locação.
+
+*   `PUT /rental/{id}`: Atualiza uma locação existente.
+
+*   `DELETE /rental/{id}`: Remove uma locação.
+
+### Exemplos de Requisições
+
+#### Criar um novo cliente
+
+**Endpoint**: `POST /customer`
+
+**Payload**:
+
+```
+{
+  "name": "Maria Souza",
+  "cpf": "12345678901",
+  "email": "maria.souza@example.com",
+  "phone": "21987654321",
+  "address": "Av. Brasil, 500",
+  "birthDate": "1985-06-15"
+}
+```
+
+**cURL**:
+
+```
+curl -X POST http://localhost:8080/customer \
+  -H "Content-Type: application/json" \
+  -d '{
+        "name": "Maria Souza",
+        "cpf": "12345678901",
+        "email": "maria.souza@example.com",
+        "phone": "21987654321",
+        "address": "Av. Brasil, 500",
+        "birthDate": "1985-06-15"
+      }'
+```
+
+#### Listar todos os clientes
+
+**Endpoint**: `GET /customer`
+
+**cURL**:
+
+```
+curl http://localhost:8080/customer
+```
+
+#### Criar um novo ator
+
+**Endpoint**: `POST /actor`
+
+**Payload**:
+
+```
+{
+  "name": "Leonardo DiCaprio",
+  "nationality": "Americano"
+}
+```
+
+**cURL**:
+
+```
+curl -X POST http://localhost:8080/actor \
+  -H "Content-Type: application/json" \
+  -d '{
+        "name": "Leonardo DiCaprio",
+        "nationality": "Americano"
+      }'
+```
+
+#### Criar um novo filme
+
+**Endpoint**: `POST /movie`
+
+**Payload**:
+
+```
+{
+  "title": "A Origem",
+  "genre": "Sci-Fi",
+  "synopsis": "Um ladrão que invade os sonhos das pessoas para roubar segredos corporativos.",
+  "duration": 148,
+  "actorIds": ["<UUID do Leonardo DiCaprio>"]
+}
+```
+
+Substitua `<UUID do Leonardo DiCaprio>` pelo ID retornado ao criar o ator.
+
+#### Registrar uma nova locação
+
+**Endpoint**: `POST /rental`
+
+**Payload**:
+
+```
+{
+  "customerId": "<UUID do Cliente>",
+  "stockId": "<UUID do Estoque>",
+  "rentalDate": "2023-10-01"
+}
+```
+
+**Nota**: Certifique-se de criar o estoque do filme antes de registrar a locação.
+
+#### Devolver um filme (atualizar locação)
+
+**Endpoint**: `PUT /rental/{id}`
+
+**Payload**:
+
+```
+{
+  "customerId": "<UUID do Cliente>",
+  "stockId": "<UUID do Estoque>",
+  "rentalDate": "2023-10-01",
+  "returnDate": "2023-10-05"
+}
+```
+
+### Observações
+
+*   **UUIDs**: IDs são gerados automaticamente. Utilize os IDs retornados nas respostas das requisições.
+
+*   **Formato de Data**: As datas devem estar no formato `YYYY-MM-DD`.
 
 ## Parando a Aplicação
 
-Para parar a aplicação e o banco de dados, você pode utilizar o comando:
+Para parar a aplicação e o banco de dados:
 
 ```
 make stop
 ```
 
-Isso irá parar ambos os serviços. Se você quiser parar apenas um dos serviços, use `make stop-app` ou `make stop-db`.
+Para parar individualmente:
+
+*   Apenas a aplicação:
+
+    ```
+    make stop-app
+    ```
+
+*   Apenas o banco de dados:
+
+    ```
+    make stop-db
+    ```
 
 ## Limpeza de Artefatos
 
-Para limpar os containers Docker, volumes e arquivos de log, utilize:
+Para remover containers, volumes e arquivos de log:
 
 ```
 make clean
 ```
 
-**Atenção**: Este comando removerá os dados persistidos no volume do PostgreSQL. Use com cautela se não quiser perder os dados armazenados.
+**Atenção**: Isso removerá todos os dados persistidos.
 
 ## Observações
 
-*   **Logs da Aplicação**: Você pode visualizar os logs da aplicação usando:
+*   **Logs da Aplicação**:
 
     ```
     docker compose logs -f app
     ```
 
-*   **Logs do Banco de Dados**: Para visualizar os logs do PostgreSQL:
+*   **Logs do Banco de Dados**:
 
     ```
     docker compose logs -f db
     ```
 
-*   **Acesso ao Banco de Dados**: Você pode acessar o banco de dados usando uma ferramenta como o `psql` ou um cliente gráfico como o DBeaver. As credenciais estão definidas no arquivo `docker-compose.yml`.
-
-    **Exemplo usando `psql`**:
+*   **Acesso ao Banco de Dados**:
 
     ```
     psql -h localhost -p 5432 -U myuser -d dvdrental
     ```
 
-*   **Recompilação da Aplicação**: Sempre que fizer alterações no código-fonte, reconstrua a imagem da aplicação:
+*   **Recompilação**:
+
+    Após alterações no código:
 
     ```
     make build-app
-    ```
-
-    Em seguida, reinicie a aplicação:
-
-    ```
     make start-app
     ```
 
-*   **Perfis do Spring Boot**: A aplicação utiliza perfis para separar as configurações de desenvolvimento e produção.
+*   **Perfis do Spring Boot**:
 
     *   **Desenvolvimento**:
 
-        *   Perfil ativo: `dev` (definido no `pom.xml` e no `application.properties`).
+        *   Perfil: `dev`
 
-        *   Configurações em `application-dev.properties`.
-
-        *   O banco de dados local é acessado via `localhost`.
-
-        *   **Execução em ambiente de desenvolvimento**: Você pode executar a aplicação localmente, sem Docker, usando:
+        *   Executar localmente:
 
             ```
             mvn spring-boot:run
             ```
 
-        *   Certifique-se de ter uma instância do PostgreSQL rodando localmente ou ajuste as configurações conforme necessário.
-
     *   **Produção**:
 
-        *   Perfil ativo: `prod` (definido via variável de ambiente `SPRING_PROFILES_ACTIVE` no `docker-compose.yml`).
+        *   Perfil: `prod`
 
-        *   Configurações em `application-prod.properties`.
+        *   Configurações no `docker-compose.yml`.
 
-        *   As variáveis de ambiente para conexão ao banco de dados são definidas no `docker-compose.yml`.
+*   **Variáveis de Ambiente**:
 
-*   **Variáveis de Ambiente Sensíveis**: As credenciais e informações sensíveis estão definidas no `docker-compose.yml`. Certifique-se de não expor informações confidenciais em repositórios públicos. Ajuste as credenciais conforme necessário para seu ambiente.
+    Ajuste as credenciais conforme necessário.
 
-*   **Makefile**: O Makefile facilita a execução de comandos comuns. Certifique-se de ter o **Make** instalado em seu sistema. No Windows, você pode utilizar o WSL ou instalar o Make via Git Bash ou outras ferramentas.
+*   **Makefile**:
 
-## Licença
+    Certifique-se de ter o **Make** instalado.
 
-Este projeto está licenciado sob os termos da licença MIT. Consulte o arquivo LICENSE para obter mais informações.
